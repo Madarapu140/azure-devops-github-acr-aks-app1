@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: Bapi-Buildpools
+  Bapi-Buildpools
 stages:
   - stage: Build
     jobs:

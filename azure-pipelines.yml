@@ -5,7 +5,6 @@
 
 trigger:
 - master
-
 pool:
   Bapi-Buildpools
 stages:
@@ -27,10 +26,12 @@ stages:
     # Target Directory: $(Build.ArtifactStagingDirectory)
             - task: CopyFiles@2
               inputs:
-                SourceFolder: '$(build.Sourcesdirectory)/kube-manifests'
+                SourceFolder: '$(System.DefaultWorkingDirectory)/kube-manifests'
                 Contents: '**'
                 TargetFolder: '$(build.artifactstagingdirectory)'
                 OverWrite: true
+ # List files from Build Artifact Staging Directory - After Copy
+            - bash: echo After copying to Build Artifact Directory; ls -R $(Build.ArtifactStagingDirectory) 
             - task: PublishBuildArtifacts@1
               inputs:
                 PathtoPublish: '$(Build.ArtifactStagingDirectory)'

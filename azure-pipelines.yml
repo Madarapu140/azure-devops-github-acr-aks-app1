@@ -8,5 +8,32 @@ trigger:
 
 pool:
   vmImage: Bapi-Buildpools
-
+stages:
+  - stage: Build
+    jobs:
+      -  job: Buildjob
+         steps:
+            - task: Docker@2
+              inputs:
+               containerRegistry: 'aks-acr-svc'
+               repository: 'Customaksnginxapp'
+               command: 'buildAndPush'
+               Dockerfile: '**/Dockerfile'
+            - task: CopyFiles@2
+              inputs:
+                SourceFolder: '$(build.Sourcesdirectory)'
+                Contents: '**'
+                TargetFolder: '$(build.artifactstagingdirectory)'
+                OverWrite: true
+            - task: PublishBuildArtifacts@1
+              inputs:
+                PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+                ArtifactName: 'drop'
+                publishLocation: 'Container'
+            - task: DownloadBuildArtifacts@1
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'drop'
+                downloadPath: '$(System.ArtifactsDirectory)'
 
